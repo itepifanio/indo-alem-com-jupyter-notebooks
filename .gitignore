@@ -6,4 +6,4 @@ _proc/
 *_cache
 build
 presentation/*.html
-presentation/index_files/*
+presentation/index_files
