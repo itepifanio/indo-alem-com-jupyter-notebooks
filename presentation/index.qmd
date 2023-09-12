@@ -109,7 +109,6 @@ O interpretador Python primeiro busca:
 > É uma forma de estruturar namespaces no Python utilizando nomes de módulos separados por pontos 
  [Python Docs](https://docs.python.org/3/tutorial/modules.html#packages)
 
-
 Pacotes podem ser entendidos como uma coleção de módulos. Verifique a seguinte estrutura:
 
 ```
@@ -207,24 +206,24 @@ Crie sua conta em https://test.pypi.org, vamos utilizar ele para publicar um pac
 
 Existem outros respositórios além do PyPI e Test PyPI
 
-- [Pypiserver](https://github.com/pypiserver/pypiserver) local or self-hosted
-- [JFrog](https://www.jfrog.com/confluence/display/JFROG/PyPI+Repositories) self-host or cloud, complete cloud solution
-- [Code artifacts](https://docs.aws.amazon.com/codeartifact/latest/ug/welcome.html) AWS cloud repository
-- [Artifact registry](https://cloud.google.com/artifact-registry/docs/python/store-python) Google cloud repository
-- [Gitlab package registry](https://docs.gitlab.com/ee/user/packages/pypi_repository/) Gitlab cloud repository, excelent to use in private projects
+- [Pypiserver](https://github.com/pypiserver/pypiserver) local ou auto-hospedagem
+- [JFrog](https://www.jfrog.com/confluence/display/JFROG/PyPI+Repositories) auto-hospedagem ou cloud, solução completa de cloud
+- [Code artifacts](https://docs.aws.amazon.com/codeartifact/latest/ug/welcome.html) repositório da AWS 
+- [Artifact registry](https://cloud.google.com/artifact-registry/docs/python/store-python) repositório da Google 
+- [Gitlab package registry](https://docs.gitlab.com/ee/user/packages/pypi_repository/) repositório do Gitlab
 
-# Literate programming
+# Programação Letrada
 
-Programming paradigm in which your code tells a story
+Paradigma em que você conda uma história com seu código
 
-## Literate programming {.smaller}
+## Programação Letrada {.smaller}
 
 :::: {.columns} 
 
 ::: {.column width="30%"}
-- Programming paradigm
+- Paradigma de programação
 - Haskell `.lhs` vs `.hs`
-- Usage increased in the last years
+- Sua utilização aumentou nos últimos anos
 - Jupyter notebooks, R Studio
 :::
 
@@ -234,14 +233,14 @@ Programming paradigm in which your code tells a story
 
 ::::
 
-## Literate programming
+## Programação Letrada
 
 ```{mermaid}
 flowchart
-  A["WEB (language and associate programs/system)"] -- "WEAVE (processor)" --> B["TEX"]
-  A -- "TANGLE (processor)" --> C["PAS"]
-  C -- PASCAL --> D["REL (binary file that can be executed)"]
-  B -- LATEX --> E["DVI (Device-independent binary)"]
+  A["WEB (linguagem e programas)"] -- "WEAVE (processador)" --> B["TEX"]
+  A -- "TANGLE (processador)" --> C["PAS"]
+  C -- PASCAL --> D["REL (arquivo binário que pode ser executado)"]
+  B -- LATEX --> E["DVI (Arquivo binário independente)"]
 ```
 
 ## Literate programming
@@ -253,50 +252,53 @@ flowchart
   B -- PANDOC --> E["PDF/HTML/DOCX"]
 ```
 
-## Jupyter notebook introduction {.smaller}
+## Introdução a jupyter notebook {.smaller}
 
 ![](images/monitor.png){.absolute top=0 right=0}
 
-- Using the virtualenv created at {username}_package, install jupyter notebooks: `pip install notebook`
-- Run `jupyter-notebook`
-- Let's get familiar with the UI (shortcuts, cell nav, cell types, .ipynb format)
+- Crie um repositório Github vazio (não adicione readme, .gitignore ou licença)
+- Clone o repositório localmente e acesse sua raiz
+- Crie seu ambiente virtual `python -m venv venv`
+- Ative-o utilizando `source venv/bin/activate`
+- Instale as dependências necessárias `pip install nbdev notebook`
+- Execute `jupyter-notebook`
 
 ::: {.callout-tip collapse="true"}
 ## UI
 
-- [Jupyter Lab](https://jupyterlab.readthedocs.io/en/stable/) it's one of the most popular UI
-- Run `pip install jupyterlab` and execute `jupyter-lab` to see its interface
+- [Jupyter Lab](https://jupyterlab.readthedocs.io/en/stable/) é uma das ferramentas mais populares
+- Instale a biblioteca utilizando `pip install jupyterlab` e execute `jupyter-lab` para ver sua interface
 
-There are additional UIs, like the VSCode plugin that renders notebooks, but I recommend you to use classic notebooks in this tutorial
+Existem outras interfaces, como o plugin VSCode que renderiza notebooks, mas eu recomendo utilizar notebooks clássicos 
+nesse tutorial por ter uma interface mais simplificada
 :::
 
 # Nbdev
 
-Using Jupyter notebooks to publish Python packaging
+Utilizando Jupyter notebooks para publicar pacotes Python
 
 ## Nbdev
 
 ![](images/card.png)
 
-## Install {.smaller}
+## Setup {.smaller}
 
 ![](images/monitor.png){.absolute top=0 right=0}
 
-- Let's move on from our {username}_package project and fork the following repository: https://github.com/itepifanio/going-beyond-with-jupyter-notebooks
-- Create a new virtualenv `python -m venv tutorial`
-- Activate your new virtualenv `source ./tutorial/bin/activate`
-- Install the package running `pip install -e .[dev]`
-- nbdev_install_hooks
-- nbdev_install_quarto
-- Run `python ./scripts/rename_package.py {username}_deck` 
+- Execute `nbdev_new --lib_name {username}_pacote`
+- Verifique as informações em `settings.ini`
+- Realize o commit das alterações: `git add . && git commit -m "Commit inicial" && git push origin main`
+- Instale o pacote localmente utilizando `pip install -e .[dev]`
+- Execute `nbdev_install_hooks`
+- Execute `nbdev_install_quarto`
 
 :::{.callout-note}
-Let's get familiar with the nbdev structure (settings.ini, nbs/, setup.py)
+Vamos nos familiarizar com a estrutura nbdev (settings.ini, nbs/, setup.py)
 
-Run `nbdev_help` in your terminal and check all available commands
+Execute `nbdev_help` no seu terminal para verificar todos os comandos disponíveis
 :::
 
-## Nbdev magic comments
+## Nbdev comentários mágicos
 
 - `#| hide`
 - `#| export`
@@ -318,7 +320,7 @@ Run `nbdev_help` in your terminal and check all available commands
 - [Streamlit Jupyter](https://github.com/ddobrinskiy/streamlit-jupyter)
 - [Banet](https://github.com/mnpinto/banet)
 
-# Good practices
+# Boas práticas
 
 Jupyter notebook and nbdev best practices
 
