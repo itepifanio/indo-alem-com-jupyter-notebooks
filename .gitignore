@@ -1,0 +1,9 @@
+# custom
+nbs/module.py
+pycon
+_docs/
+_proc/
+*_cache
+build
+presentation/*.html
+presentation/index_files/*

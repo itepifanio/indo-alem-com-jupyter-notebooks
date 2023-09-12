@@ -1,0 +1,922 @@
+---
+title: "Indo além com Jupyter Notebooks"
+subtitle: "Bem vindo! Esse tutorial irá mostrar como utilizar Jupyter notebooks para publicar pacotes Python & mais"
+format:
+  revealjs:
+    slide-number: true
+    css: styles.css
+    footer: Indo além com Jupyter Notebooks
+---
+
+## Olá, sou o Ítalo Epifânio {.smaller}
+
+::: {.fragment}
+- Rio Grandense da trombinha do elefante
+![](images/mapa-pau-dos-ferros.png){.absolute top=0 right=0 width=350 height=238}
+:::
+::: {.fragment}
+- Cientista da Computação*
+- RnD Python Developer
+- Desenvolvedor Open Source
+:::
+
+::: {.fragment}
+- Contribuidor da comunidade Python (Grupy RN)
+![](images/grupyrn.png){.absolute top=250 right=0}
+:::
+
+## Sumário {.smaller}
+
+Esse tutorial irá:
+
+- Introduzir os principais conceitos para publicar um pacote Python
+- Discutir o sistema de pacotes Python e como distribui-los
+- Explicar o conceito de programação letrada
+- Mostrar como utilizar Jupyter notebook e Jupyter lab
+- Introduzir a biblioteca Nbdev
+- Explicar boas práticas de desenvolvimento em notebooks
+
+## Sumário {.smaller}
+
+- Mostrar algumas ferramentas para assegurar qualidade de código
+- Discutir como rodar testes em software
+- Mostrar como e onde publicar
+- Introduzir o uso de Github Actions e CI/CD
+
+- Bônus (se o tempo permitir):
+    - Falar sobre pacotes python (passado e futuro)
+    - Introduzir como construir UI para Jupyter notebooks
+    - Mostrar como customizar documentações utilizando Quarto
+    - Demonstrar como utilizar ChatGPT em notebooks
+
+# Pacotes Python
+
+Vamos introduzir/revisar alguns conceitos chaves para entender pacotes python e sua estrutura
+
+## Módulos
+
+> Módulos são arquivos que contem definições e declarações Python 
+ [Python Docs](https://docs.python.org/3/tutorial/modules.html#modules)
+
+Qualquer arquivo `.py` pode ser considerado um módulo
+
+```python
+%%writefile module.py
+
+def hello(name):
+    print(f'hello, {name}')
+```
+
+```python
+import module
+
+module.hello("audience!")
+```
+
+## Módulo
+
+Módulos também podem ser executados como scripts python:
+
+```python
+%%writefile module.py
+
+def hello(name):
+    print(f'hello, {name}')
+
+if __name__ == "__main__":
+    import sys
+    hello(sys.argv[1])
+```
+
+```python
+! python module.py 'Maria'
+```
+
+::: {.callout-note}
+O condicional `if __name__ == "__main__"` verifica que a função `hello` será executada 
+somente quando o módulo estiver sendo executado como o arquivo principal (`main`)
+:::
+
+## Sistema de busca de módulos
+
+O interpretador Python primeiro busca:
+
+- Nos módulos built-in (listados em `sys.builtin_module_names`)
+- Nos arquivos `.py` do diretório atual (`sys.path`)
+
+## Pacotes Python
+
+> É uma forma de estruturar namespaces no Python utilizando nomes de módulos separados por pontos 
+ [Python Docs](https://docs.python.org/3/tutorial/modules.html#packages)
+
+
+Pacotes podem ser entendidos como uma coleção de módulos. Verifique a seguinte estrutura:
+
+```
+somefolder/
+    package/
+        __init__.py
+        module1.py
+        subpackage/
+            module2.py
+```
+
+## Sistema de busca por pacote
+
+Quando importa-se pacotes, o interpretador Python busca por diretórios listados em `sys.path`
+
+# Por que utilizar pacotes?
+
+Vamos discutir os prós e contras de utilizar pacotes
+
+## Por que utilizar pacotes?
+
+Vamos pensar no filme "Vingadores" como um grande pacote com diversos super heróis (Hulk, Viúva Negra, Thor, etc).
+
+```{mermaid}
+flowchart LR
+  subgraph avengers1
+    A["Vingadores\n (Hulk, Víuva Negra, Thor)"]
+  end
+
+  subgraph avengers2
+   direction TB
+    B["Hulk"] --> C["Vingadores"]
+    D["Thor"] --> C
+    E["Viúva Negra"] --> C
+  end
+
+  avengers1 --> avengers2
+```
+
+:::{.callout-note}
+Exemplo da palestra [Arquitetura Modular com pacotes Python](https://www.youtube.com/watch?v=Ccw9Dlw9b2c) apresentado na Python Brazil, 2022
+:::
+
+:::{.notes}
+Para utilizar super heróis em diversas linhas do tempo a duplicação de código seria necessária no avengers1, o que aumentaria a complexidade do código.
+A ideia de criar pacotes para cada super-herói permite combinar eles em diferentes filmes.
+::: 
+
+## Prós e contras
+
+::: {.columns}
+
+::: {.column width="50%"}
+- Aumenta reuso de código
+- Diminui acoplamento 
+- Facilita com que outros desenvolvedores usem o código
+- Divide a responsabilidade entre times
+- Pode facilitar a manutenção
+:::
+
+::: {.column width="50%"}
+- Gestão de dependencia pode ser custosa
+- É difícil garantir a segurança de códigos de terceiros
+- Pacotes podem ter mais funcionalidades que as necessárias
+:::
+
+:::
+
+## Como publicar? {.smaller}
+
+Como publicar pacotes no PyPI e então baixar?
+
+```{mermaid}
+flowchart TD
+  A["Arquivos do pacote (setup.py, pyproject.toml)"] --> B["Montar backend (sdist, wheel)"]
+  B --> C["Artefato do pacote (.tar.gz, .whl)"]
+  C --> D["Upload utilizando o Twine (Pypi, TestPypi)"]
+```
+
+# Pypi
+
+Python Package Index
+
+## Ferramental
+
+- [pip](https://packaging.python.org/en/latest/key_projects/#pip) é o oficial e mais popular gerenciador de pacotes Python
+- [PyPI](https://pypi.org/) é o catalogo de onde o pip baixa os arquivos
+- [Test PyPI](https://packaging.python.org/en/latest/guides/using-testpypi/) um catalogo separado para testes
+
+:::{.callout-note}
+Crie sua conta em https://test.pypi.org, vamos utilizar ele para publicar um pacote
+:::
+
+## Outros repositórios Python
+
+Existem outros respositórios além do PyPI e Test PyPI
+
+- [Pypiserver](https://github.com/pypiserver/pypiserver) local or self-hosted
+- [JFrog](https://www.jfrog.com/confluence/display/JFROG/PyPI+Repositories) self-host or cloud, complete cloud solution
+- [Code artifacts](https://docs.aws.amazon.com/codeartifact/latest/ug/welcome.html) AWS cloud repository
+- [Artifact registry](https://cloud.google.com/artifact-registry/docs/python/store-python) Google cloud repository
+- [Gitlab package registry](https://docs.gitlab.com/ee/user/packages/pypi_repository/) Gitlab cloud repository, excelent to use in private projects
+
+# Literate programming
+
+Programming paradigm in which your code tells a story
+
+## Literate programming {.smaller}
+
+:::: {.columns} 
+
+::: {.column width="30%"}
+- Programming paradigm
+- Haskell `.lhs` vs `.hs`
+- Usage increased in the last years
+- Jupyter notebooks, R Studio
+:::
+
+::: {.column width="70%"}
+![](images/donald-knuth-quote.png)
+:::
+
+::::
+
+## Literate programming
+
+```{mermaid}
+flowchart
+  A["WEB (language and associate programs/system)"] -- "WEAVE (processor)" --> B["TEX"]
+  A -- "TANGLE (processor)" --> C["PAS"]
+  C -- PASCAL --> D["REL (binary file that can be executed)"]
+  B -- LATEX --> E["DVI (Device-independent binary)"]
+```
+
+## Literate programming
+
+```{mermaid}
+flowchart
+  A["Jupyter Notebook"] -- "Quarto" --> B["MD"]
+  A -- "Nbdev" --> C["PY"]
+  B -- PANDOC --> E["PDF/HTML/DOCX"]
+```
+
+## Jupyter notebook introduction {.smaller}
+
+![](images/monitor.png){.absolute top=0 right=0}
+
+- Using the virtualenv created at {username}_package, install jupyter notebooks: `pip install notebook`
+- Run `jupyter-notebook`
+- Let's get familiar with the UI (shortcuts, cell nav, cell types, .ipynb format)
+
+::: {.callout-tip collapse="true"}
+## UI
+
+- [Jupyter Lab](https://jupyterlab.readthedocs.io/en/stable/) it's one of the most popular UI
+- Run `pip install jupyterlab` and execute `jupyter-lab` to see its interface
+
+There are additional UIs, like the VSCode plugin that renders notebooks, but I recommend you to use classic notebooks in this tutorial
+:::
+
+# Nbdev
+
+Using Jupyter notebooks to publish Python packaging
+
+## Nbdev
+
+![](images/card.png)
+
+## Install {.smaller}
+
+![](images/monitor.png){.absolute top=0 right=0}
+
+- Let's move on from our {username}_package project and fork the following repository: https://github.com/itepifanio/going-beyond-with-jupyter-notebooks
+- Create a new virtualenv `python -m venv tutorial`
+- Activate your new virtualenv `source ./tutorial/bin/activate`
+- Install the package running `pip install -e .[dev]`
+- nbdev_install_hooks
+- nbdev_install_quarto
+- Run `python ./scripts/rename_package.py {username}_deck` 
+
+:::{.callout-note}
+Let's get familiar with the nbdev structure (settings.ini, nbs/, setup.py)
+
+Run `nbdev_help` in your terminal and check all available commands
+:::
+
+## Nbdev magic comments
+
+- `#| hide`
+- `#| export`
+- `#| exporti`
+- `#| exec_doc`
+- `#| code-fold`
+- `#| default_exp core`
+- `#| eval: false`
+
+## Nbdev awesome projects {.smaller}
+
+- [FastAI](https://github.com/fastai/fastai)
+- [Ipyannotator](https://github.com/palaimon/ipyannotator)
+- [TSAI](https://github.com/timeseriesAI/tsai)
+- [FastKafta](https://github.com/airtai/fastkafka)
+- [Number Blog](https://github.com/crowdcent/numerblox)
+- [UPIT](https://github.com/tmabraham/UPIT)
+- [AskAI](https://github.com/radekosmulski/ask_ai)
+- [Streamlit Jupyter](https://github.com/ddobrinskiy/streamlit-jupyter)
+- [Banet](https://github.com/mnpinto/banet)
+
+# Good practices
+
+Jupyter notebook and nbdev best practices
+
+## Notebook type
+
+![Know the type of notebook you're writing (Diataxis System)](https://documentation.divio.com/_images/overview.png)
+
+## Good title and subtitle
+
+There are two ways of doing that, one with markdown:
+
+```bash
+# My H1 title
+
+> My description
+```
+
+Other using Quarto:
+
+```bash
+---
+title: "My title"
+description: "My description"
+---
+```
+
+## Change the text according to the notebook type
+
+- Reference: Start with a small description of the component, use symbolic links for easy navigation
+- Tutorials and guides: Describe what the reader will learn and how. Be objective
+- Explanation: A brief review about the topic is enough to guide the reader
+
+## Use visualizations {.smaller}
+
+Jupyter notebooks are very interactive. Use images, videos, audio
+
+```{python}
+import matplotlib.pyplot as plt
+plt.plot([1,23,2,4])
+plt.plot([8,65,23,90])
+plt.show()
+```
+
+## Keep your cells small
+
+- There are no rules for cell size, but take it easy
+- Use @patch `from fastcore.basics import patch`
+- Increase the notebook's testability by writing small function/classes per cell
+
+## Jupyter notebooks
+
+- Keep your imports at the top of the notebook
+- Don't import and use code at the same cell
+- Avoid ambiguous execution orders
+- Use code cells for experiments
+
+## Doc parameters {.smaller}
+
+Nbdev has two types of parameter documentation, the classic (numpy-style), as it follows:
+
+```python
+def add_np(a, b=0):
+    """The sum of two numbers.
+
+    Parameters
+    ----------
+    a : int
+        the 1st number to add
+    b : int
+        the 2nd number to add (default: 0)
+    """
+    return a + b
+```
+
+## Doc parameters {.smaller}
+
+```{python}
+from nbdev.showdoc import show_doc
+
+def add_np(a, b=0):
+    """The sum of two numbers.
+
+    Parameters
+    ----------
+    a : int
+        the 1st number to add
+    b : int
+        the 2nd number to add (default: 0)
+    """
+    return a + b
+
+show_doc(add_np)
+```
+
+## Doc parameters {.smaller}
+
+And the nbdev approach called "docments"
+
+```python
+def add(
+    a: int,  # the 1st number to add
+    b=0,  # the 2nd number to add
+):
+    "The sum of two numbers."
+    return a + b
+```
+
+```{python}
+from nbdev.showdoc import show_doc
+
+def add(
+    a: int,  # the 1st number to add
+    b=0,  # the 2nd number to add
+):
+    "The sum of two numbers."
+    return a + b
+
+show_doc(add)
+```
+
+## Write tests
+
+- Keyword assert can be used for testing
+- Run `nbdev_test`
+
+```python
+assert add(1, 1) == 2
+```
+
+## Exercise {.smaller}
+
+![](images/monitor.png){.absolute top=0 right=0}
+
+```python
+import collections
+
+Card = collections.namedtuple("Card", ["rank", "suit"])
+```
+
+:::{.callout-note}
+- Create a new notebook called `card_utils.ipynb`
+- Add a title and description to the notebook
+- Copy the `Card` class definition
+- Create a function `card_name` that returns `1 of Hearts`
+- Test that the `card_name` function returns the expected outputs
+- Add your notebook to `sidebar.yml`
+- Run `nbdev_preview` and see the changes
+- Run `nbdev_test` and check if the tests are passing
+:::
+
+# Package
+
+We're already familiar with the `Card` definition. Let's investigate the package code.
+
+## Exercise
+
+![](images/monitor.png){.absolute top=0 right=0}
+
+:::{.callout-note}
+- Add a code cell at the top of the `card_utils.ipynb` nb with `#| default_exp card_utils`
+- Next, add a code cell with `from nbdev import nbdev_export` (remember adding a `#| export` comment to the `def card_utils(...)` cell)
+- At the end of `card_utils.ipynb` add `nbdev_export()`
+- Execute nb and check the `{username}_deck` folder
+:::
+
+# Dependencies
+
+Avoid dependency hell for others
+
+## Dependency Hell
+
+- When a software grows, more libs tend to be added
+- Packages are awesome: they can add features, avoid/fix errors and provide more security to a software
+- But keeping packages updated can be tricky
+- Ex. Dependency 1 expects Python 3.7 usage and Dependency 2 expects Python 3.9
+
+## Specify your dependencies
+
+- ~= to specify releases
+- == to fix a version
+- != to exclude a version
+- <=, >= to inclusively specify a range of versions
+- <, > to specify a range of versions
+
+## Releasing
+
+- Semantic versioning is a set of rules that helps avoiding dependency hell
+- It MUST declare a public API and it SHOULD be comprehensive 
+- The version number MUST use the X.Y.Z format where X, Y, Z are 
+non-negative integers and each element SHOULD increase numerically
+- MAJOR.MINOR.PATCH
+
+## Keep a changelog
+
+- Semantic versioning is very didatic but it's not human readable
+- Changelog keeps a chronological order list of notable changes of 
+each version of a project
+- It improves the transparency
+- Helps keeping developers accountable
+- Helps stakeholders to understand the project's direction
+- Keeps a list of the bugs
+
+# Quality Assurance
+
+Improve your code by using automatic tools
+
+## NbQA
+
+There are several tools that analise code and:
+
+- Avoid errors and code smells
+- Define a code style
+- Improve readability
+- Measure code quality
+
+## NbQA
+
+Popular tools that analise code:
+
+- Autopep8
+- Black
+- Flake8
+- MyPy
+- Isort
+
+All of them (and some others) can be executed using NbQA
+
+```bash
+nbqa <tool-name> <tool-params>
+```
+
+## MyPy {.smaller}
+
+> Static type checker. It validates your code typing without executing it
+
+Previous to Python 3.5 (we didn't have typing), it was common to use docstring to define types:
+
+```python
+def natural_sum(x, y):
+    """
+    Args:
+        x (int): first parameter of the sum
+        y (int): second parameter of the sum
+    Returns:
+        Optional[int]: Sum of x and y if both bigger than zero
+    """
+    if x < 0 or y < 0:
+        return None
+
+    return x + y
+```
+
+## MyPy {.smaller}
+
+The need of tools to validate data typing made Python add the typing system to its core. 
+
+Run the following snippet on your terminal:
+
+```bash
+! nbqa mypy *.ipynb --ignore-missing-imports
+```
+
+:::{.callout-note}
+The type system was developed to help other tools like MyPy to check types 
+statically but libs like pydantic started to validate typing in runtime as well 
+for some use cases
+:::
+
+:::{.callout-tip}
+Check MyPy usage creating a adding function: 
+
+```python
+def add(a: int, b: int) -> int:
+  return a + b
+```
+
+and testing the function using:
+
+```python
+add('1', '2')
+```
+:::
+
+## Flake8 {.smaller}
+
+> Is a style guide enforcement
+
+It saves time when a team starts discussing empty spaces and small code style details on pull requests
+
+Run the following snippet in your terminal:
+
+```bash
+! nbqa flake8 *.ipynb
+```
+
+:::{.callout-tip}
+- Test flake8 usage by adding a import that it's not used like `import matplotlib`
+- Check the .flake8 file (it is used by autopep8* as well)
+:::
+
+## Autopep8
+
+> Code format enforcer according to [PEP 8](https://peps.python.org/pep-0008/)
+
+It's very useful to clean empty space and format notebooks with a well known code style
+
+Run the following snippet in your terminal:
+
+```bash
+! nbqa autopep8 nbs/*.ipynb --in-place
+```
+
+## Black
+
+> Another code format enforcer but more flexible
+
+Works similarly to autopep8 but it's not restricted to PEP 8
+
+Run the following snippet in your terminal:
+
+```bash
+! nbqa black nbs/*.ipynb
+```
+
+# Advanced testing
+
+![](images/monitor.png){.absolute top=0 right=0}
+
+Test isolation with i(pytest). Let's explore the advanced testing nb
+
+# Publishing
+
+Nbdev allows publish package by using its CLI
+
+## Conda and PyPI
+
+- It can publish on both: `nbdev_pypi`, `nbdev_conda`, `nbdev_release_both`
+- [Less documented](https://github.com/fastai/nbdev/pull/1320) but it also allows Test PyPI usage (`nbdev_pypi --repository testpypi`)
+
+:::{.callout-note}
+As we did before with the `{username}_package` let's publish this package using `nbdev_pypi --repository testpypi`
+:::
+
+## Secret keys
+
+Python package system uses the [.pypirc](https://packaging.python.org/en/latest/specifications/pypirc/) to define the repository packages:
+
+```toml
+[distutils]
+index-servers = testpypi
+
+[testpypi]
+repository=https://test.pypi.org/legacy/
+username=<your-username>
+password=<your-password>
+```
+
+## Secret keys
+
+Username and password usage are not encouraged, consider generating a token for your package:
+
+```toml
+[distutils]
+index-servers = testpypi
+
+[testpypi]
+repository=https://test.pypi.org/legacy/
+username = __token__
+password = <PyPI token>
+```
+
+## Custom repositories {.smaller}
+
+To add custom repositories (private or not) you can change `~/.pypirc` and add the repository name to `[distutils]`
+
+```toml
+[distutils]
+index-servers =
+    pypi
+    testpypi
+    private-repository
+
+[pypi]
+username = __token__
+password = <PyPI token>
+
+[testpypi]
+username = __token__
+password = <TestPyPI token>
+
+[private-repository]
+repository = <private-repository URL>
+username = <private-repository username>
+password = <private-repository password>
+```
+
+# CI/CD
+
+Let's run QA and publish our package using Github Actions
+
+## Continuous Integration/Continuous Delivery 
+
+- Well known concept in DevOps that recently became more acessible to developers
+- Method to frequently deliver apps to customers
+- It automates some stages of the app development
+- Enforces security of the deliver
+
+## Continuous Integration/Continuous Delivery 
+
+```{mermaid}
+flowchart LR
+  subgraph CI
+    A["Build"] --> B["Test"] --> C["Merge"]
+  end
+  
+  subgraph CD
+      D["Automatically release"] --> E["Automatically deploy"]
+  end
+  
+  C --> D
+```
+
+## Tools
+
+- [Github Actions](https://github.com/features/actions)
+- [Gitlab CI/CD](https://about.gitlab.com/)
+- [Jenkins](https://www.jenkins.io/)
+- [Circle CI](https://circleci.com/)
+
+And many others
+
+## Github Actions
+
+- Easy to use
+- Free until 2000 minutes/month
+- Most tools have some integration with it
+
+## Github actions core concepts {.smaller}
+
+- *Events*: It's a specific activity in your Github repository that triggers an action. For example, the opening of a PR, a commit being sent, etc
+- *Jobs*: It's a sequence of steps that will be executed by a shell script or action. Jobs can be executed in parallel or sequentially
+- *Action*: Custom application that uses the Github Action platform, it usually automates a repetitive task like the configuration of an environment or managing a complex dependency, even service authentication (like cloud)
+- *Runner*: Server that executes workflows. Every runner executes a job per time
+
+## Github secrets & Test Pypi token {.smaller}
+
+- Let's create a token for our {username}_deck repository
+
+:::{.callout-note}
+At Test PyPI webpage access `Account Settings >> Api Tokens >> Add Api Token`
+:::
+
+- In your Github repository go to: `Settings >> Actions (at security tab) >> New repository secret` and add the token with the name `TEST_PYPI_API_TOKEN`
+
+## Workflows
+
+![](images/monitor.png){.absolute top=0 right=0}
+
+(Interactive explanation of files from `.github/worflows/*.yaml`)
+
+## Publishing using CI
+
+:::{.callout-note}
+- Upgrade the version at `settings.ini`
+- Update your changelog
+- Commit and push your changes to Github
+- Check if tests and lint are passing
+- Create a new release at Github following the semantic versioning to use our CD of the package
+:::
+
+# Python Packaging history
+
+Let's look at the past to discuss the future of Python packaging
+
+## History 
+
+::: {.incremental}
+- Python 1 (1998-2000) didn't have a package manager
+- Distutils was added to Python 1.6 using setup.py
+- In 2003 setuptools was introduced as an improvement of distutils
+- In 2004 easy_install was developed to be used alongside setuptools
+- In 2008 the PyPA (Python Packaging Authority) was founded 
+:::
+
+## History
+
+::: {.incremental}
+- In 2011 `pip` became the default package manager
+- In 2013 the `wheel` package was introduced
+- In 2017 the `flit` package was developed, introducing `pyproject.toml`
+- In 2020 the PEP 621 made `pyproject.toml` the standard way to develop packages
+:::
+
+# Quarto and Styling
+
+[Quarto](quarto.org/) is an open source tool that allows creating content dinamically using Python, R, Julia and Observable. It was introduced to Nbdev recently
+
+## Executing
+
+Try to execute `quarto preview nbs/00_deck.ipynb` in your terminal
+
+:::{.callout-note}
+Quarto is already installed on our setup thanks to `nbdev_install_quarto`
+:::
+
+## Doc preview
+
+Changing ports when rendering nbdev docs can be annoying, change `_quarto.yml` to fix a port and avoid opening new tabs.
+
+```yaml
+project:
+  preview:
+    port: 3000
+    browser: false
+```
+
+## Doc navigation
+
+Quarto allows easy customization of the navbar
+
+```yaml
+website:
+  navbar:
+    background: primary
+      search: true
+      collapse-below: lg
+      left:
+        - text: "My page"
+          href: gettings_started.ipynb
+      right:
+        - icon: github
+          href: "https://github.com/user/project"
+```
+
+## Google analytics
+
+Activate analytics tracking but remember asking for cookie consent if your country legislation requires it
+
+```yaml
+website:
+  google-analytics: "UA-XXXXXXXX"
+  cookie-consent: true
+```
+
+## Dark mode
+
+You can define the quarto theme to (de)activate dark mode
+
+```yaml
+format:
+  html:
+    theme:
+      light: flatly
+      dark: darkly
+```
+
+## Page navigation
+
+Your project may require continuous page navigation
+
+```yaml
+website:
+  page-navigation: true
+```
+
+## Reader mode
+
+Enable reader mode
+
+```yaml
+website:
+  reader-mode: true
+```
+
+# Playground
+
+We've already published our package and know more about nbdev powers, let's have some fun with nbs
+
+## Ipywidgets
+
+![](images/monitor.png){.absolute top=0 right=0}
+
+Let's run the UI for jupyter notebooks nb
+
+:::{.callout-tip}
+Run voila over the `03_ui_for_jupyter_notebook.ipynb` using `voila 03_ui_for_jupyter_notebook.ipynb` 
+:::
+
+## ChatGPT
+
+![](images/monitor.png){.absolute top=0 right=0}
+
+Let's use ChatGPT in our nbs by running the ChatGPT nb
+
+# Conclusion
+
+- Jupyter notebooks are awesome for quick prototyping
+- Code, doc and tests can be used to tell a story and improve docs
+- Jupyter notebooks & nbdev allow literate programming
+- Publishing a package with nbdev is easy, faster and efficient
+- Visual libraries benefit a lot from nbdev
