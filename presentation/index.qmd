@@ -322,40 +322,40 @@ Execute `nbdev_help` no seu terminal para verificar todos os comandos disponíve
 
 # Boas práticas
 
-Jupyter notebook and nbdev best practices
+Melhores práticas com Jupyter notebook e nbdev
 
-## Notebook type
+## Tipos de Jupyter notebook
 
-![Know the type of notebook you're writing (Diataxis System)](https://documentation.divio.com/_images/overview.png)
+![Saiba que tipo de notebook você está escrevendo (Sistema Diataxis)](https://documentation.divio.com/_images/overview.png)
 
-## Good title and subtitle
+## Bom título e subtítulo
 
-There are two ways of doing that, one with markdown:
+Existem duas formas de fazer isso, a primeira com markdown:
 
 ```bash
-# My H1 title
+# Meu título H1
 
-> My description
+> Minha descrição
 ```
 
-Other using Quarto:
+Ou usando a sintaxe Quarto:
 
 ```bash
 ---
-title: "My title"
-description: "My description"
+title: "Meu título"
+description: "Minha descrição"
 ---
 ```
 
-## Change the text according to the notebook type
+## Mude o texto de acordo com o tipo de notebook
 
-- Reference: Start with a small description of the component, use symbolic links for easy navigation
-- Tutorials and guides: Describe what the reader will learn and how. Be objective
-- Explanation: A brief review about the topic is enough to guide the reader
+- Referência: Inicie com uma descrição geral do componente, utilize links para facilitar navegação
+- Tutorial e guias: Descreva ao leitor o que ele vai aprender e como. Seja objetivo
+- Explicação: Breve explicação do tópico é suficiente para guiar o leitor durante a leitura
 
-## Use visualizations {.smaller}
+## Use visualizações {.smaller}
 
-Jupyter notebooks are very interactive. Use images, videos, audio
+Jupyter notebooks são bastante interativos. Use e abuse de images, videos e audios
 
 ```{python}
 import matplotlib.pyplot as plt
@@ -364,22 +364,22 @@ plt.plot([8,65,23,90])
 plt.show()
 ```
 
-## Keep your cells small
+## Mantenha suas células pequenas
 
-- There are no rules for cell size, but take it easy
+- Não existem regras para o tamanho das células, mas seja razoavel
 - Use @patch `from fastcore.basics import patch`
-- Increase the notebook's testability by writing small function/classes per cell
+- Melhore a testabilidade do notebook adicionando pequenos testes abaixo de cada célula de código
 
 ## Jupyter notebooks
 
-- Keep your imports at the top of the notebook
-- Don't import and use code at the same cell
-- Avoid ambiguous execution orders
-- Use code cells for experiments
+- Mantenha seus imports no topo do notebook
+- Não import bibliotecas e execute código python na mesma célula
+- Evite ordens de execução ambíguas
+- Use células para experimentar o código desenvolvido
 
-## Doc parameters {.smaller}
+## Documentação de parâmetros {.smaller}
 
-Nbdev has two types of parameter documentation, the classic (numpy-style), as it follows:
+Nbdev tem duas formas de documentação, a clássica (estilo numpy), como se segue:
 
 ```python
 def add_np(a, b=0):
@@ -395,7 +395,7 @@ def add_np(a, b=0):
     return a + b
 ```
 
-## Doc parameters {.smaller}
+## Documentação de parâmetros {.smaller}
 
 ```{python}
 from nbdev.showdoc import show_doc
@@ -417,7 +417,7 @@ show_doc(add_np)
 
 ## Doc parameters {.smaller}
 
-And the nbdev approach called "docments"
+E a abordagem nbdev chamada de "docments"
 
 ```python
 def add(
@@ -441,54 +441,18 @@ def add(
 show_doc(add)
 ```
 
-## Write tests
+## Escreva testes
 
-- Keyword assert can be used for testing
-- Run `nbdev_test`
+- A palavra chave `assert` pode ser utilizada para testes
+- `nbdev_test`
 
 ```python
 assert add(1, 1) == 2
 ```
 
-## Exercise {.smaller}
+# Dependências
 
-![](images/monitor.png){.absolute top=0 right=0}
-
-```python
-import collections
-
-Card = collections.namedtuple("Card", ["rank", "suit"])
-```
-
-:::{.callout-note}
-- Create a new notebook called `card_utils.ipynb`
-- Add a title and description to the notebook
-- Copy the `Card` class definition
-- Create a function `card_name` that returns `1 of Hearts`
-- Test that the `card_name` function returns the expected outputs
-- Add your notebook to `sidebar.yml`
-- Run `nbdev_preview` and see the changes
-- Run `nbdev_test` and check if the tests are passing
-:::
-
-# Package
-
-We're already familiar with the `Card` definition. Let's investigate the package code.
-
-## Exercise
-
-![](images/monitor.png){.absolute top=0 right=0}
-
-:::{.callout-note}
-- Add a code cell at the top of the `card_utils.ipynb` nb with `#| default_exp card_utils`
-- Next, add a code cell with `from nbdev import nbdev_export` (remember adding a `#| export` comment to the `def card_utils(...)` cell)
-- At the end of `card_utils.ipynb` add `nbdev_export()`
-- Execute nb and check the `{username}_deck` folder
-:::
-
-# Dependencies
-
-Avoid dependency hell for others
+Evite "dependency hell"
 
 ## Dependency Hell
 
