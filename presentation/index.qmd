@@ -456,181 +456,87 @@ Evite "dependency hell"
 
 ## Dependency Hell
 
-- When a software grows, more libs tend to be added
-- Packages are awesome: they can add features, avoid/fix errors and provide more security to a software
-- But keeping packages updated can be tricky
-- Ex. Dependency 1 expects Python 3.7 usage and Dependency 2 expects Python 3.9
+- Quando um software cresce há uma tendência que mais bibliotecas sejam adicionadas
+- Pacotes são massa: adicionam funcionalidades, evitam/corrigem erros
+- Manutenção e atualização de pacotes pode ser desafiador
+- Ex. Dependência 1 espera Python 3.7 e dependência 2 espera Python 3.9
 
-## Specify your dependencies
+## Especifique suas dependências
 
-- ~= to specify releases
-- == to fix a version
-- != to exclude a version
-- <=, >= to inclusively specify a range of versions
-- <, > to specify a range of versions
+- ~= para releases específicas
+- == para fixar uma versão
+- != para excluir uma versão
+- <=, >=, <, > para incluir um range de versões
 
-## Releasing
+## Releases
 
-- Semantic versioning is a set of rules that helps avoiding dependency hell
-- It MUST declare a public API and it SHOULD be comprehensive 
+- Versionamento semântico é um conjunto de regras que pode evitar dependency hell
+- Para isso a biblioteca DEVE declarar uma API pública compreensível
+- O versionamento DEVE usar o formato X.Y.Z onde X, Y, Z são inteiros não negativos 
+e cada elemento deve ser aumentando numericamente
 - The version number MUST use the X.Y.Z format where X, Y, Z are 
-non-negative integers and each element SHOULD increase numerically
 - MAJOR.MINOR.PATCH
 
-## Keep a changelog
+## Mantenha um changelog
 
-- Semantic versioning is very didatic but it's not human readable
-- Changelog keeps a chronological order list of notable changes of 
-each version of a project
-- It improves the transparency
-- Helps keeping developers accountable
-- Helps stakeholders to understand the project's direction
-- Keeps a list of the bugs
+- Versionamento semântico é bastante didático mas não é legível para humanos
+- Changelog mantém uma ordem cronológica de modificações notáveis a cada versão do projeto
+- Melhora a transparência
+- Entendimento geral da direção do projeto por desenvolvedores ou não desenvolvedores
+- Mantém uma lista de bugs resolvidos
 
-# Quality Assurance
+# Garantia de qualidade
 
-Improve your code by using automatic tools
+Melhore seu código utilizando ferramentas automatizadas
 
 ## NbQA
 
-There are several tools that analise code and:
+Existem diversas ferramentas de análise de código que:
 
-- Avoid errors and code smells
-- Define a code style
-- Improve readability
-- Measure code quality
+- Evitam erros e más práticas de código (code smells)
+- Definem estilo de código
+- Melhoram a leitura
+- Medem a qualidade de código
 
 ## NbQA
 
-Popular tools that analise code:
+Ferramentas populares:
 
 - Autopep8
 - Black
 - Flake8
 - MyPy
-- Isort
 
-All of them (and some others) can be executed using NbQA
+Todas essas (e algumas outras) podem ser executadas utilizando NbQA
 
 ```bash
 nbqa <tool-name> <tool-params>
 ```
 
-## MyPy {.smaller}
-
-> Static type checker. It validates your code typing without executing it
-
-Previous to Python 3.5 (we didn't have typing), it was common to use docstring to define types:
-
-```python
-def natural_sum(x, y):
-    """
-    Args:
-        x (int): first parameter of the sum
-        y (int): second parameter of the sum
-    Returns:
-        Optional[int]: Sum of x and y if both bigger than zero
-    """
-    if x < 0 or y < 0:
-        return None
-
-    return x + y
-```
-
-## MyPy {.smaller}
-
-The need of tools to validate data typing made Python add the typing system to its core. 
-
-Run the following snippet on your terminal:
-
-```bash
-! nbqa mypy *.ipynb --ignore-missing-imports
-```
-
-:::{.callout-note}
-The type system was developed to help other tools like MyPy to check types 
-statically but libs like pydantic started to validate typing in runtime as well 
-for some use cases
-:::
-
-:::{.callout-tip}
-Check MyPy usage creating a adding function: 
-
-```python
-def add(a: int, b: int) -> int:
-  return a + b
-```
-
-and testing the function using:
-
-```python
-add('1', '2')
-```
-:::
-
-## Flake8 {.smaller}
-
-> Is a style guide enforcement
-
-It saves time when a team starts discussing empty spaces and small code style details on pull requests
-
-Run the following snippet in your terminal:
-
-```bash
-! nbqa flake8 *.ipynb
-```
-
-:::{.callout-tip}
-- Test flake8 usage by adding a import that it's not used like `import matplotlib`
-- Check the .flake8 file (it is used by autopep8* as well)
-:::
-
 ## Autopep8
 
-> Code format enforcer according to [PEP 8](https://peps.python.org/pep-0008/)
+> Formatador de código que segue a [PEP 8](https://peps.python.org/pep-0008/)
 
-It's very useful to clean empty space and format notebooks with a well known code style
+Muito útil para limpar espaços em branco e realizar formação de código em notebooks
 
-Run the following snippet in your terminal:
+Execute o seguinte comando em seu terminal:
 
 ```bash
 ! nbqa autopep8 nbs/*.ipynb --in-place
 ```
 
-## Black
+# Publicando
 
-> Another code format enforcer but more flexible
-
-Works similarly to autopep8 but it's not restricted to PEP 8
-
-Run the following snippet in your terminal:
-
-```bash
-! nbqa black nbs/*.ipynb
-```
-
-# Advanced testing
-
-![](images/monitor.png){.absolute top=0 right=0}
-
-Test isolation with i(pytest). Let's explore the advanced testing nb
-
-# Publishing
-
-Nbdev allows publish package by using its CLI
+Nbdev permite que publiquemos pacotes python utilizando sua CLI
 
 ## Conda and PyPI
 
-- It can publish on both: `nbdev_pypi`, `nbdev_conda`, `nbdev_release_both`
-- [Less documented](https://github.com/fastai/nbdev/pull/1320) but it also allows Test PyPI usage (`nbdev_pypi --repository testpypi`)
+- `nbdev_pypi`, `nbdev_conda`, `nbdev_release_both`
+- [Menos documentado](https://github.com/fastai/nbdev/pull/1320) mas também permite publicar no Test PyPI (`nbdev_pypi --repository testpypi`)
 
-:::{.callout-note}
-As we did before with the `{username}_package` let's publish this package using `nbdev_pypi --repository testpypi`
-:::
+## Chaves secretas
 
-## Secret keys
-
-Python package system uses the [.pypirc](https://packaging.python.org/en/latest/specifications/pypirc/) to define the repository packages:
+O sistema de pacote python usam o arquivo [.pypirc](https://packaging.python.org/en/latest/specifications/pypirc/) para definir os repositórios:
 
 ```toml
 [distutils]
@@ -642,9 +548,9 @@ username=<your-username>
 password=<your-password>
 ```
 
-## Secret keys
+## Chaves secretas
 
-Username and password usage are not encouraged, consider generating a token for your package:
+Username e senhas não são encorrajadas, considere gerar um token para seu pacote:
 
 ```toml
 [distutils]
@@ -656,43 +562,18 @@ username = __token__
 password = <PyPI token>
 ```
 
-## Custom repositories {.smaller}
-
-To add custom repositories (private or not) you can change `~/.pypirc` and add the repository name to `[distutils]`
-
-```toml
-[distutils]
-index-servers =
-    pypi
-    testpypi
-    private-repository
-
-[pypi]
-username = __token__
-password = <PyPI token>
-
-[testpypi]
-username = __token__
-password = <TestPyPI token>
-
-[private-repository]
-repository = <private-repository URL>
-username = <private-repository username>
-password = <private-repository password>
-```
-
 # CI/CD
 
-Let's run QA and publish our package using Github Actions
+Vamos executar testes, ferramentas de QA e publicar nosso pacote utilizando Github Actions
 
-## Continuous Integration/Continuous Delivery 
+## Integração Contínua/Entrega Contínua
 
-- Well known concept in DevOps that recently became more acessible to developers
-- Method to frequently deliver apps to customers
-- It automates some stages of the app development
-- Enforces security of the deliver
+- Conceito DevOps que recentemente se tornou mais acessível a todos os desenvolvedores
+- Metodologia de frequentemente entregar novas versões de apps a clientes
+- Automatiza etapas do processo de entrega de novas versões
+- Garante segurança nessa entrega
 
-## Continuous Integration/Continuous Delivery 
+## Integração Contínua/Entrega Contínua
 
 ```{mermaid}
 flowchart LR
@@ -707,43 +588,43 @@ flowchart LR
   C --> D
 ```
 
-## Tools
+## Ferramentas
 
 - [Github Actions](https://github.com/features/actions)
 - [Gitlab CI/CD](https://about.gitlab.com/)
 - [Jenkins](https://www.jenkins.io/)
 - [Circle CI](https://circleci.com/)
 
-And many others
+E várias outras
 
 ## Github Actions
 
-- Easy to use
-- Free until 2000 minutes/month
-- Most tools have some integration with it
+- Fácil de usar
+- Grátis até 2000 minutos/mês
+- Maioria das ferramentas tem uma integração
 
-## Github actions core concepts {.smaller}
+## Github actions conceitos principains {.smaller}
 
-- *Events*: It's a specific activity in your Github repository that triggers an action. For example, the opening of a PR, a commit being sent, etc
-- *Jobs*: It's a sequence of steps that will be executed by a shell script or action. Jobs can be executed in parallel or sequentially
-- *Action*: Custom application that uses the Github Action platform, it usually automates a repetitive task like the configuration of an environment or managing a complex dependency, even service authentication (like cloud)
-- *Runner*: Server that executes workflows. Every runner executes a job per time
+- *Events*: É uma atividade específica do seu repositório Github que pode iniciar alguma ação. Por exemplo, abrir um PR, enviar um commit, etc 
+- *Jobs*: Sequencia de passos que vão ser executados via shell script ou action. Jobs podem ser executados em paralelo ou sequencialmente
+- *Action*: Aplicação customizada que usa a plataforma Github Action, normalmente automatiza alguma tarefa repetitiva como configurar um ambiente (ex. Python) ou gerenciar dependências mais complexas
+- *Runner*: Servidor que executa os jobs. Cada runner executa um job de cada vez
 
 ## Github secrets & Test Pypi token {.smaller}
 
-- Let's create a token for our {username}_deck repository
+- Vamos criar um token para o nosso pacote
 
 :::{.callout-note}
-At Test PyPI webpage access `Account Settings >> Api Tokens >> Add Api Token`
+Na interface Test PyPI acesse `Account Settings >> Api Tokens >> Add Api Token`
 :::
 
-- In your Github repository go to: `Settings >> Actions (at security tab) >> New repository secret` and add the token with the name `TEST_PYPI_API_TOKEN`
+- Na interface do seu repositório Github acesse: `Settings >> Actions (at security tab) >> New repository secret` and add the token with the name `TEST_PYPI_API_TOKEN`
 
 ## Workflows
 
 ![](images/monitor.png){.absolute top=0 right=0}
 
-(Interactive explanation of files from `.github/worflows/*.yaml`)
+Adicionando arquivos `.github/worflows/*.yaml`
 
 ## Publishing using CI
 
