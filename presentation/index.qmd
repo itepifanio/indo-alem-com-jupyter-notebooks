@@ -11,7 +11,7 @@ format:
 ## Olá, sou o Ítalo Epifânio {.smaller}
 
 ::: {.fragment}
-- Rio Grandense da trombinha do elefante
+- Norte-rio-grandense da trombinha do elefante
 ![](images/mapa-pau-dos-ferros.png){.absolute top=0 right=0 width=350 height=238}
 :::
 ::: {.fragment}
@@ -260,7 +260,7 @@ flowchart
 - Clone o repositório localmente e acesse sua raiz
 - Crie seu ambiente virtual `python -m venv venv`
 - Ative-o utilizando `source venv/bin/activate`
-- Instale as dependências necessárias `pip install nbdev notebook`
+- Instale as dependências necessárias `pip install nbdev notebook twine`
 - Execute `jupyter-notebook`
 
 ::: {.callout-tip collapse="true"}
@@ -326,7 +326,7 @@ Melhores práticas com Jupyter notebook e nbdev
 
 ## Tipos de Jupyter notebook
 
-![Saiba que tipo de notebook você está escrevendo (Sistema Diataxis)](https://documentation.divio.com/_images/overview.png)
+![Saiba que tipo de notebook você está escrevendo (Sistema Diataxis)](images/diataxis.png)
 
 ## Bom título e subtítulo
 
@@ -533,6 +533,7 @@ Nbdev permite que publiquemos pacotes python utilizando sua CLI
 
 - `nbdev_pypi`, `nbdev_conda`, `nbdev_release_both`
 - [Menos documentado](https://github.com/fastai/nbdev/pull/1320) mas também permite publicar no Test PyPI (`nbdev_pypi --repository testpypi`)
+- Vamos publicar nosso pacote `nbdev_pypi --repository testpypi`
 
 ## Chaves secretas
 
@@ -626,14 +627,16 @@ Na interface Test PyPI acesse `Account Settings >> Api Tokens >> Add Api Token`
 
 Adicionando arquivos `.github/worflows/*.yaml`
 
+Vá para (TODO::add link) e copie as pastas `scripts` e `.github` para seu repositório
+
 ## Publishing using CI
 
 :::{.callout-note}
-- Upgrade the version at `settings.ini`
-- Update your changelog
-- Commit and push your changes to Github
-- Check if tests and lint are passing
-- Create a new release at Github following the semantic versioning to use our CD of the package
+- Atualize a versão da biblioteca `nbdev_bump_version`
+- Adicione `dev_requirements = nbdev` no arquivo `setting.ini`
+- Realize um commit e dê push nas suas mudanças
+- Verifique se os teste e lint estão passando
+- Crie uma nova release na interface do Github
 :::
 
 # Python Packaging history
