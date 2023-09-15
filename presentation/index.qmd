@@ -641,44 +641,41 @@ Adicionando arquivos `.github/worflows/*.yaml`
 - Crie uma nova release na interface do Github
 :::
 
-# Python Packaging history
+# Mais teoria ou prática?
 
-Let's look at the past to discuss the future of Python packaging
+Você que decide
 
-## History 
+# História dos pacotes python
+
+Vamos discutir o passado e futuro dos pacotes Python
+
+## História 
 
 ::: {.incremental}
-- Python 1 (1998-2000) didn't have a package manager
-- Distutils was added to Python 1.6 using setup.py
-- In 2003 setuptools was introduced as an improvement of distutils
-- In 2004 easy_install was developed to be used alongside setuptools
-- In 2008 the PyPA (Python Packaging Authority) was founded 
+- Python 1 (1998-2000) não tinha um gerenciador de pacote
+- Distutils foi adicionado em Python 1.6 utilizando setup.py
+- Em 2003 setuptools foi introduzido como melhoria ao distutils
+- Em 2004 easy_install foi desenvolvido para ser utilizado junto ao setuptools
+- Em 2008 a PyPA (Python Packaging Authority) foi fundada 
 :::
 
 ## History
 
 ::: {.incremental}
-- In 2011 `pip` became the default package manager
-- In 2013 the `wheel` package was introduced
-- In 2017 the `flit` package was developed, introducing `pyproject.toml`
-- In 2020 the PEP 621 made `pyproject.toml` the standard way to develop packages
+- Em 2011 `pip` se tornou o gerenciador de pacotes padrão
+- Em 2013 o formato `wheel` foi introduzido
+- Em 2017 o pacote `flit` introduziu `pyproject.toml`
+- Em 2020 a PEP 621 fez `pyproject.toml` se tornar o padrão de configuração de pacotes
 :::
 
-# Quarto and Styling
+# Quarto e Estilização
 
-[Quarto](quarto.org/) is an open source tool that allows creating content dinamically using Python, R, Julia and Observable. It was introduced to Nbdev recently
-
-## Executing
-
-Try to execute `quarto preview nbs/00_deck.ipynb` in your terminal
-
-:::{.callout-note}
-Quarto is already installed on our setup thanks to `nbdev_install_quarto`
-:::
+[Quarto](quarto.org/) é uma ferramenta open source que permite que você crie conteúdo utilizando Python, R, Julia e Observable. 
+Nbdev <3 Quarto
 
 ## Doc preview
 
-Changing ports when rendering nbdev docs can be annoying, change `_quarto.yml` to fix a port and avoid opening new tabs.
+Mudar de portas quando renderizando a documentação pode ser chato. Você pode fixar uma porta e evitar abrir novas abas:
 
 ```yaml
 project:
@@ -687,9 +684,9 @@ project:
     browser: false
 ```
 
-## Doc navigation
+## Navegação da documentação
 
-Quarto allows easy customization of the navbar
+Fácil customização da barra de navegação
 
 ```yaml
 website:
@@ -699,15 +696,13 @@ website:
       collapse-below: lg
       left:
         - text: "My page"
-          href: gettings_started.ipynb
+          href: index.ipynb
       right:
         - icon: github
           href: "https://github.com/user/project"
 ```
 
 ## Google analytics
-
-Activate analytics tracking but remember asking for cookie consent if your country legislation requires it
 
 ```yaml
 website:
@@ -716,8 +711,6 @@ website:
 ```
 
 ## Dark mode
-
-You can define the quarto theme to (de)activate dark mode
 
 ```yaml
 format:
@@ -729,16 +722,14 @@ format:
 
 ## Page navigation
 
-Your project may require continuous page navigation
+Se seu projeto precisa de navegação contínua
 
 ```yaml
 website:
   page-navigation: true
 ```
 
-## Reader mode
-
-Enable reader mode
+## Modo leitura
 
 ```yaml
 website:
@@ -747,7 +738,7 @@ website:
 
 # Playground
 
-We've already published our package and know more about nbdev powers, let's have some fun with nbs
+Já publicamos nosso pacote, agora vamos descobrir mais dos super poderes dos Jupyter notebooks
 
 ## Ipywidgets
 
