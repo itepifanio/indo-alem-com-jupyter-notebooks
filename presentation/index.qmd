@@ -627,13 +627,15 @@ Na interface Test PyPI acesse `Account Settings >> Api Tokens >> Add Api Token`
 
 Adicionando arquivos `.github/worflows/*.yaml`
 
-Vá para (TODO::add link) e copie as pastas `scripts` e `.github` para seu repositório
+- Vá para https://l1nq.com/nb-pyne-2023 
+- Copie as pastas `scripts`, `.github`  para seu repositório
+- Copie o arquivo `.flake8` para o seu repositório
 
 ## Publishing using CI
 
 :::{.callout-note}
 - Atualize a versão da biblioteca `nbdev_bump_version`
-- Adicione `dev_requirements = nbdev` no arquivo `setting.ini`
+- Adicione `dev_requirements = nbdev autopep8 flake8 mypy` no arquivo `setting.ini`
 - Realize um commit e dê push nas suas mudanças
 - Verifique se os teste e lint estão passando
 - Crie uma nova release na interface do Github
