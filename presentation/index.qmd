@@ -744,22 +744,22 @@ Já publicamos nosso pacote, agora vamos descobrir mais dos super poderes dos Ju
 
 ![](images/monitor.png){.absolute top=0 right=0}
 
-Let's run the UI for jupyter notebooks nb
+Vamos discutir interfaces, voila, tendencias de desenvolvimento de data science
 
 :::{.callout-tip}
-Run voila over the `03_ui_for_jupyter_notebook.ipynb` using `voila 03_ui_for_jupyter_notebook.ipynb` 
+Executar `03_ui_for_jupyter_notebook.ipynb` usando `voila 03_ui_for_jupyter_notebook.ipynb` 
 :::
 
 ## ChatGPT
 
 ![](images/monitor.png){.absolute top=0 right=0}
 
-Let's use ChatGPT in our nbs by running the ChatGPT nb
+Vamos utilizar o ChatGPT em nossos nbs
 
-# Conclusion
+# Conclusão do tutorial
 
-- Jupyter notebooks are awesome for quick prototyping
-- Code, doc and tests can be used to tell a story and improve docs
-- Jupyter notebooks & nbdev allow literate programming
-- Publishing a package with nbdev is easy, faster and efficient
-- Visual libraries benefit a lot from nbdev
+- Jupyter notebooks são massa para prototipação rápida
+- Código, documentação e testes podem ser utilizados para contar uma história do seu código
+- Jupyter notebooks & nbdev permitem utilizar o paradigma da programação letrada
+- Publicar pacotes com nbdev é fácil, rápido e eficiente
+- Bibliotecas visuais se beneficiam muito de nbdev
